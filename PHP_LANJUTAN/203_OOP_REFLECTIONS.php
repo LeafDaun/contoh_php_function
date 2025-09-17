@@ -48,16 +48,59 @@ $method->setAccessible(true); // Mengizinkan akses ke metode private
 echo $method->invoke($mobil) . PHP_EOL; // Memanggil metode private
 
 /*
-Penjelasan
-1. Kelas Database: Kelas ini menyimulasikan koneksi ke database dengan metode connect.
-
-2. Kelas UserService: Kelas ini bergantung pada Database dan menggunakan metode connect untuk mendapatkan data pengguna.
-
-3. Fungsi createService: Fungsi ini menggunakan Reflection untuk:
-    - Mengambil informasi tentang konstruktor kelas yang diberikan.
-    - Mengambil parameter dari konstruktor dan menciptakan instance dari setiap dependensi.
-    - Mengembalikan instance dari kelas dengan dependensi yang sudah disuntikkan.
-4. Membuat Instance: Kami memanggil createService dengan nama kelas UserService, yang secara otomatis menyuntikkan instance Database ke dalamnya.
+=====================================================================================
+CONTOH 2 :
 */
+
+
+Class Person 
+{
+    
+    function __construct(
+        protected string $name,
+        protected int $age,
+    )
+    {
+        // php 8
+    }
+
+    function getName()
+    {
+        return $this->name;
+    }
+
+    function getAge()
+    {
+        return $this->age;
+    }
+
+    private function getDetails()
+    {
+        return "DATA : Name $this->name , Age $this->age Years";
+    }
+}
+
+$person = new Person('Hemly Daun', 43);
+$reflection = new ReflectionClass($person);
+echo "Name Class : " . $reflection->getName() . PHP_EOL;
+$nomor = 1;
+$nomor2 = 1;
+$properties = $reflection->getProperties();
+
+foreach($properties as $property){
+    echo "Property : $nomor " . $property->getName() . PHP_EOL;
+    $nomor++;
+}
+
+$method = $reflection->getMethods();
+
+foreach($method as $mth){
+    echo "Method : $nomor2 " . $mth->getName() . PHP_EOL;
+    $nomor2++;
+}
+
+$p = $reflection->getMethod('getDetails');
+
+echo $p->invoke($person);
 
 ?>
